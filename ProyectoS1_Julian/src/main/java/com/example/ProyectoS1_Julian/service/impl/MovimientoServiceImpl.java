@@ -45,7 +45,7 @@ public class MovimientoServiceImpl implements com.example.ProyectoS1_Julian.serv
         Movimiento movimientoGuardado = movimientoRepository.save(movimiento);
 
         // Mapear entidades relacionadas a DTOs
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.toDTO(usuario);
+        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(usuario);
         BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(bodegaOrigen, dtoUsuario);
         BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(bodegaDestino, dtoUsuario);
 
@@ -68,7 +68,7 @@ public class MovimientoServiceImpl implements com.example.ProyectoS1_Julian.serv
         movimientoMapper.actualizarEntidadDesdeDTO(movimiento, dto, usuario, bodegaOrigen, bodegaDestino);
         Movimiento movimientoActualizado = movimientoRepository.save(movimiento);
 
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.toDTO(usuario);
+        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(usuario);
         BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(bodegaOrigen, dtoUsuario);
         BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(bodegaDestino, dtoUsuario);
 
@@ -78,7 +78,7 @@ public class MovimientoServiceImpl implements com.example.ProyectoS1_Julian.serv
     @Override
     public List<MovimientoResponseDTO> listarMovimientos() {
         return movimientoRepository.findAll().stream().map(movimiento -> {
-            UsuarioResponseDTO dtoUsuario = usuarioMapper.toDTO(movimiento.getUsuario());
+            UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(movimiento.getUsuario());
             BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(movimiento.getBodegaOrigen(), dtoUsuario);
             BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(movimiento.getBodegaDestino(), dtoUsuario);
             return movimientoMapper.entidadADTO(movimiento, dtoUsuario, dtoOrigen, dtoDestino);
@@ -90,7 +90,7 @@ public class MovimientoServiceImpl implements com.example.ProyectoS1_Julian.serv
         Movimiento movimiento = movimientoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));
 
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.toDTO(movimiento.getUsuario());
+        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(movimiento.getUsuario());
         BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(movimiento.getBodegaOrigen(), dtoUsuario);
         BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(movimiento.getBodegaDestino(), dtoUsuario);
 

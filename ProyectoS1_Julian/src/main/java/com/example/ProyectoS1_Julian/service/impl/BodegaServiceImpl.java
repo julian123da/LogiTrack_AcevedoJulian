@@ -32,7 +32,7 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
         Bodega bodega = bodegaMapper.DTOAentidad(dto, usuario);
         bodega = bodegaRepository.save(bodega);
 
-        return bodegaMapper.entidadADTO(bodega, usuarioMapper.toDTO(usuario));
+        return bodegaMapper.entidadADTO(bodega, usuarioMapper.entidadADTO(usuario));
     }
 
     @Override
@@ -46,13 +46,13 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
         bodegaMapper.actualizarEntidadDesdeDTO(bodega, dto, usuario);
         bodega = bodegaRepository.save(bodega);
 
-        return bodegaMapper.entidadADTO(bodega, usuarioMapper.toDTO(usuario));
+        return bodegaMapper.entidadADTO(bodega, usuarioMapper.entidadADTO(usuario));
     }
 
     @Override
     public List<BodegaResponseDTO> listarBodegas() {
         return bodegaRepository.findAll().stream().map(dato-> bodegaMapper.entidadADTO(dato,usuarioMapper
-                .toDTO(usuarioRepository.findById(dato.getEncargado().getId())
+                .entidadADTO(usuarioRepository.findById(dato.getEncargado().getId())
                         .orElseThrow(()->new RuntimeException("No existe la bodega"))))).toList();
     }
 
@@ -62,7 +62,7 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
                 .orElseThrow(() -> new EntityNotFoundException("Bodega no encontrada"));
 
         Usuario u = usuarioRepository.findById(bodega.getEncargado().getId()).orElseThrow(()-> new RuntimeException("Error"));
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.toDTO(u);
+        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(u);
         return bodegaMapper.entidadADTO(bodega,dtoUsuario);
     }
 

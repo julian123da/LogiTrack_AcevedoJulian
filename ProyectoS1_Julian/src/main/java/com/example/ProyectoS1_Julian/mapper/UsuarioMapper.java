@@ -11,7 +11,7 @@ public class UsuarioMapper {
 
     /* DTO entidad */
 
-    public Usuario toEntity(UsuarioRequestDTO dto){
+    public Usuario DTOAentidad(UsuarioRequestDTO dto){
 
         if(dto == null) return null;
 
@@ -28,7 +28,7 @@ public class UsuarioMapper {
 
     /* entidad DTO */
 
-    public UsuarioResponseDTO toDTO(Usuario usuario){
+    public UsuarioResponseDTO entidadADTO(Usuario usuario){
 
         if(usuario == null) return null;
 

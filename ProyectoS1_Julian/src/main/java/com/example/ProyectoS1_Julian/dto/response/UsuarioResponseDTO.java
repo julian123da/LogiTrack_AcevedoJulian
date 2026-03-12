@@ -1,10 +1,15 @@
 package com.example.ProyectoS1_Julian.dto.response;
 
+import com.example.ProyectoS1_Julian.modelo.Rol;
+
 public record UsuarioResponseDTO(
-        long id,
+
+        Long id,
         String nombre,
         String documento,
-        String rol,
-        String usuario
+        Rol rol,
+        String usuario,
+        String password
+
 ) {
 }

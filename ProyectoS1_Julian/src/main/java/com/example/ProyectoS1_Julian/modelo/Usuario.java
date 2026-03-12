@@ -26,6 +26,5 @@ public class Usuario {
     private String usuario;
     @Column(nullable = false)
     private String password;
-    public void getUsuario(String usuario) {
-    }
+
 }

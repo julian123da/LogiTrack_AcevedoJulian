@@ -2,8 +2,7 @@ package com.example.ProyectoS1_Julian.dto.response;
 
 public record DetalleMovimientoResponseDTO(
         Long id,
-        Long idMovimiento,
-        Long idProducto,
+        Long movimientoId,
+        Long productoId,
         Integer cantidad
-) {
-}
+) {}

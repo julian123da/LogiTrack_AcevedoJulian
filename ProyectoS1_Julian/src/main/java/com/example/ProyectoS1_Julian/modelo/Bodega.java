@@ -26,5 +26,4 @@ public class Bodega {
     @JoinColumn(name = "idEncargado", nullable = false)
     private Usuario encargado;
 
-
 }

@@ -23,7 +23,7 @@ public class Usuario {
     @Column(nullable = false)
     private Rol rol;
     @Column(nullable = false)
-    private String usuario;
+    private String username;
     @Column(nullable = false)
     private String password;
 

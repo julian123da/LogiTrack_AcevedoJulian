@@ -20,7 +20,7 @@ public class UsuarioMapper {
         newusuario.setNombre(dto.nombre());
         newusuario.setDocumento(dto.documento());
         newusuario.setRol(Rol.valueOf(dto.rol()));
-        newusuario.setUsuario(dto.usuario());
+        newusuario.setUsername(dto.username());
         newusuario.setPassword(dto.password());
 
         return newusuario;
@@ -38,7 +38,7 @@ public class UsuarioMapper {
                 usuario.getNombre(),
                 usuario.getDocumento(),
                 usuario.getRol(),
-                usuario.getUsuario(),
+                usuario.getUsername(),
                 usuario.getPassword()
 
         );
@@ -54,7 +54,7 @@ public class UsuarioMapper {
         usuario.setNombre(dto.nombre());
         usuario.setDocumento(dto.documento());
         usuario.setRol(Rol.valueOf(dto.rol()));
-        usuario.setUsuario(dto.usuario());
+        usuario.setUsername(dto.username());
         usuario.setPassword(dto.password());
 
     }

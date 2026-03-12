@@ -9,7 +9,7 @@ id INT PRIMARY KEY NOT NULL,
 nombre VARCHAR(50) NOT NULL,
 documento VARCHAR(20) NOT NULL,
 rol ENUM("admin","empleado") NOT NULL,
-usuario VARCHAR(50) NOT NULL,
+username VARCHAR(50) NOT NULL,
 contrasena VARCHAR(50) NOT NULL
 );
 
@@ -30,14 +30,6 @@ idEncargado INT NOT NULL,
 FOREIGN KEY (idEncargado) REFERENCES usuario(id)
 );
 
-CREATE TABLE inventario(
-id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-idBodega INT NOT NULL,
-idProducto INT NOT NULL,
-cantidad INT NOT NULL,
-FOREIGN KEY (idBodega) REFERENCES bodega(id),
-FOREIGN KEY (idProducto) REFERENCES producto(id)
-);
 
 CREATE TABLE movimiento(
 id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,

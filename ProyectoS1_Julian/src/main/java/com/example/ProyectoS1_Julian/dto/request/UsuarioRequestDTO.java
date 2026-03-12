@@ -31,7 +31,7 @@ public record UsuarioRequestDTO(
                 example = "julian_admin"
         )
         @NotBlank(message = "El usuario no puede estar vacio.")
-        String usuario,
+        String username,
 
         @Schema(
                 description = "Contraseña del usuario",

@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "Auditoría", description = "Operaciones relacionadas con Auditorías")
 @RestController
-@RequestMapping("/api/auditorias")
+@RequestMapping("/api/auditoria")
 @RequiredArgsConstructor
 public class AuditoriaController {
 

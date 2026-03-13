@@ -1,17 +1,15 @@
 package com.example.ProyectoS1_Julian.modelo;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Table(name = "detalleMovimiento")
+@Table(name = "detalle_movimiento")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DetalleMovimiento {
 
     @Id
@@ -28,6 +26,4 @@ public class DetalleMovimiento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
-
-
 }

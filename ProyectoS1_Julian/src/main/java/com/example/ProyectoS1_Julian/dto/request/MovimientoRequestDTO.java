@@ -11,7 +11,7 @@ public record MovimientoRequestDTO(
         @Schema (description = "Fecha del movimiento")
         Date fecha,
 
-        @Schema(description = "Tipo de movimiento", example = "entrada")
+        @Schema(description = "Tipo de movimiento", example = "ENTRADA")
         TipoMovimiento tipoMovimiento,
 
         @Schema(description = "ID del usuario responsable", example = "1")

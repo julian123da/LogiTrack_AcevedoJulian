@@ -57,8 +57,7 @@ public class DetalleMovimientoController {
             @ApiResponse(responseCode = "200", description = "Lista de DetallesMovimiento obtenida correctamente")
     })
     public ResponseEntity<List<DetalleMovimientoResponseDTO>> listarDetalles() {
-        List<DetalleMovimientoResponseDTO> lista = detalleMovimientoService.listarDetallesMovimiento();
-        return ResponseEntity.ok(lista);
+        return ResponseEntity.ok().body(detalleMovimientoService.listarDetallesMovimiento());
     }
 
     @Operation(summary = "Buscar DetalleMovimiento por ID", description = "Obtiene un detalle de movimiento por su ID")

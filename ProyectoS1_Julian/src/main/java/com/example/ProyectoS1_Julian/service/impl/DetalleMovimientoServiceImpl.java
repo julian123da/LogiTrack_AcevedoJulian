@@ -1,21 +1,33 @@
 package com.example.ProyectoS1_Julian.service.impl;
 
-import com.example.ProyectoS1_Julian.service.DetalleMovimientoService;
 import com.example.ProyectoS1_Julian.dto.request.DetalleMovimientoRequestDTO;
-import com.example.ProyectoS1_Julian.dto.response.*;
-import com.example.ProyectoS1_Julian.mapper.*;
-import com.example.ProyectoS1_Julian.modelo.Movimiento;
+import com.example.ProyectoS1_Julian.dto.response.BodegaResponseDTO;
+import com.example.ProyectoS1_Julian.dto.response.DetalleMovimientoResponseDTO;
+import com.example.ProyectoS1_Julian.dto.response.MovimientoResponseDTO;
+import com.example.ProyectoS1_Julian.dto.response.ProductoResponseDTO;
+import com.example.ProyectoS1_Julian.dto.response.UsuarioResponseDTO;
+import com.example.ProyectoS1_Julian.mapper.BodegaMapper;
+import com.example.ProyectoS1_Julian.mapper.DetalleMovimientoMapper;
+import com.example.ProyectoS1_Julian.mapper.MovimientoMapper;
+import com.example.ProyectoS1_Julian.mapper.ProductoMapper;
+import com.example.ProyectoS1_Julian.mapper.UsuarioMapper;
 import com.example.ProyectoS1_Julian.modelo.DetalleMovimiento;
+import com.example.ProyectoS1_Julian.modelo.Movimiento;
 import com.example.ProyectoS1_Julian.modelo.Producto;
-import com.example.ProyectoS1_Julian.repository.*;
+import com.example.ProyectoS1_Julian.repository.DetalleMovimientoRepository;
+import com.example.ProyectoS1_Julian.repository.MovimientoRepository;
+import com.example.ProyectoS1_Julian.repository.ProductoRepository;
+import com.example.ProyectoS1_Julian.service.DetalleMovimientoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DetalleMovimientoServiceImpl implements DetalleMovimientoService {
 
     private final DetalleMovimientoRepository detalleMovimientoRepository;
@@ -24,47 +36,25 @@ public class DetalleMovimientoServiceImpl implements DetalleMovimientoService {
     private final MovimientoMapper movimientoMapper;
     private final ProductoRepository productoRepository;
     private final ProductoMapper productoMapper;
-    private final BodegaRepository bodegaRepository;
     private final BodegaMapper bodegaMapper;
-    private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
 
     @Override
     public DetalleMovimientoResponseDTO crearDetalleMovimiento(DetalleMovimientoRequestDTO dto) {
         Movimiento movimiento = movimientoRepository.findById(dto.movimientoId())
-                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));
 
         Producto producto = productoRepository.findById(dto.productoId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
         DetalleMovimiento dm = detalleMovimientoMapper.DTOAentidad(dto, movimiento, producto);
         DetalleMovimiento dmGuardado = detalleMovimientoRepository.save(dm);
 
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(
-                usuarioRepository.findById(movimiento.getUsuario().getId())
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
-
-        BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(movimiento.getBodegaOrigen().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega origen no encontrada")), dtoUsuario);
-
-        BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(movimiento.getBodegaDestino().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada")), dtoUsuario);
-
-        MovimientoResponseDTO dtoMovimiento = movimientoMapper.entidadADTO(movimiento, dtoUsuario, dtoOrigen, dtoDestino);
-
-        UsuarioResponseDTO dtoUsuarioBodega = usuarioMapper.entidadADTO(
-                usuarioRepository.findById(producto.getBodega().getUsuario().getId())
-                        .orElseThrow(() -> new RuntimeException("Usuario de la bodega no encontrado")));
-
-        BodegaResponseDTO dtoBodegaProducto = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(producto.getBodega().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega del producto no encontrada")), dtoUsuarioBodega);
-
-        ProductoResponseDTO dtoProducto = productoMapper.entidadADTO(producto, dtoBodegaProducto);
-
-        return detalleMovimientoMapper.entidadADTO(dmGuardado, dtoMovimiento, dtoProducto);
+        return detalleMovimientoMapper.entidadADTO(
+                dmGuardado,
+                construirMovimientoDTO(dmGuardado.getMovimiento()),
+                construirProductoDTO(dmGuardado.getProducto())
+        );
     }
 
     @Override
@@ -73,115 +63,44 @@ public class DetalleMovimientoServiceImpl implements DetalleMovimientoService {
                 .orElseThrow(() -> new EntityNotFoundException("DetalleMovimiento no encontrado"));
 
         Movimiento movimiento = movimientoRepository.findById(dto.movimientoId())
-                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));
 
         Producto producto = productoRepository.findById(dto.productoId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
         detalleMovimientoMapper.actualizarEntidadDesdeDTO(dm, dto, movimiento, producto);
-
         DetalleMovimiento dmActualizado = detalleMovimientoRepository.save(dm);
 
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(
-                usuarioRepository.findById(movimiento.getUsuario().getId())
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
-
-        BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(movimiento.getBodegaOrigen().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega origen no encontrada")), dtoUsuario);
-
-        BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(movimiento.getBodegaDestino().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada")), dtoUsuario);
-
-        MovimientoResponseDTO dtoMovimiento = movimientoMapper.entidadADTO(dmActualizado.getMovimiento(), dtoUsuario, dtoOrigen, dtoDestino);
-
-        UsuarioResponseDTO dtoUsuarioBodega = usuarioMapper.entidadADTO(
-                usuarioRepository.findById(producto.getBodega().getUsuario().getId())
-                        .orElseThrow(() -> new RuntimeException("Usuario de la bodega no encontrado")));
-
-        BodegaResponseDTO dtoBodegaProducto = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(producto.getBodega().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega del producto no encontrada")), dtoUsuarioBodega);
-
-        ProductoResponseDTO dtoProducto = productoMapper.entidadADTO(producto, dtoBodegaProducto);
-
-        return detalleMovimientoMapper.entidadADTO(dmActualizado, dtoMovimiento, dtoProducto);
+        return detalleMovimientoMapper.entidadADTO(
+                dmActualizado,
+                construirMovimientoDTO(dmActualizado.getMovimiento()),
+                construirProductoDTO(dmActualizado.getProducto())
+        );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DetalleMovimientoResponseDTO> listarDetallesMovimiento() {
-        return detalleMovimientoRepository.findAll().stream().map(dato -> {
-            Movimiento movimiento = movimientoRepository.findById(dato.getMovimiento().getId())
-                    .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
-
-            Producto producto = productoRepository.findById(dato.getProducto().getId())
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-            UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(
-                    usuarioRepository.findById(movimiento.getUsuario().getId())
-                            .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
-
-            BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(
-                    bodegaRepository.findById(movimiento.getBodegaOrigen().getId())
-                            .orElseThrow(() -> new RuntimeException("Bodega origen no encontrada")), dtoUsuario);
-
-            BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(
-                    bodegaRepository.findById(movimiento.getBodegaDestino().getId())
-                            .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada")), dtoUsuario);
-
-            MovimientoResponseDTO dtoMovimiento = movimientoMapper.entidadADTO(movimiento, dtoUsuario, dtoOrigen, dtoDestino);
-
-            UsuarioResponseDTO dtoUsuarioBodega = usuarioMapper.entidadADTO(
-                    usuarioRepository.findById(producto.getBodega().getUsuario().getId())
-                            .orElseThrow(() -> new RuntimeException("Usuario de la bodega no encontrado")));
-
-            BodegaResponseDTO dtoBodegaProducto = bodegaMapper.entidadADTO(
-                    bodegaRepository.findById(producto.getBodega().getId())
-                            .orElseThrow(() -> new RuntimeException("Bodega del producto no encontrada")), dtoUsuarioBodega);
-
-            ProductoResponseDTO dtoProducto = productoMapper.entidadADTO(producto, dtoBodegaProducto);
-
-            return detalleMovimientoMapper.entidadADTO(dato, dtoMovimiento, dtoProducto);
-        }).toList();
+        return detalleMovimientoRepository.findAll().stream()
+                .map(detalle -> detalleMovimientoMapper.entidadADTO(
+                        detalle,
+                        construirMovimientoDTO(detalle.getMovimiento()),
+                        construirProductoDTO(detalle.getProducto())
+                ))
+                .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DetalleMovimientoResponseDTO buscarPorId(Long id) {
         DetalleMovimiento dm = detalleMovimientoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("DetalleMovimiento no encontrado"));
 
-        Movimiento movimiento = movimientoRepository.findById(dm.getMovimiento().getId())
-                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
-
-        Producto producto = productoRepository.findById(dm.getProducto().getId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(
-                usuarioRepository.findById(movimiento.getUsuario().getId())
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
-
-        BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(movimiento.getBodegaOrigen().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega origen no encontrada")), dtoUsuario);
-
-        BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(movimiento.getBodegaDestino().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada")), dtoUsuario);
-
-        MovimientoResponseDTO dtoMovimiento = movimientoMapper.entidadADTO(movimiento, dtoUsuario, dtoOrigen, dtoDestino);
-
-        UsuarioResponseDTO dtoUsuarioBodega = usuarioMapper.entidadADTO(
-                usuarioRepository.findById(producto.getBodega().getUsuario().getId())
-                        .orElseThrow(() -> new RuntimeException("Usuario de la bodega no encontrado")));
-
-        BodegaResponseDTO dtoBodegaProducto = bodegaMapper.entidadADTO(
-                bodegaRepository.findById(producto.getBodega().getId())
-                        .orElseThrow(() -> new RuntimeException("Bodega del producto no encontrada")), dtoUsuarioBodega);
-
-        ProductoResponseDTO dtoProducto = productoMapper.entidadADTO(producto, dtoBodegaProducto);
-
-        return detalleMovimientoMapper.entidadADTO(dm, dtoMovimiento, dtoProducto);
+        return detalleMovimientoMapper.entidadADTO(
+                dm,
+                construirMovimientoDTO(dm.getMovimiento()),
+                construirProductoDTO(dm.getProducto())
+        );
     }
 
     @Override
@@ -190,5 +109,60 @@ public class DetalleMovimientoServiceImpl implements DetalleMovimientoService {
             throw new EntityNotFoundException("DetalleMovimiento no encontrado para eliminar");
         }
         detalleMovimientoRepository.deleteById(id);
+    }
+
+    private MovimientoResponseDTO construirMovimientoDTO(Movimiento movimiento) {
+        if (movimiento == null) {
+            throw new EntityNotFoundException("El detalle no tiene movimiento asociado");
+        }
+
+        if (movimiento.getUsuario() == null) {
+            throw new EntityNotFoundException("El movimiento no tiene usuario asociado");
+        }
+
+        if (movimiento.getBodegaOrigen() == null) {
+            throw new EntityNotFoundException("El movimiento no tiene bodega origen asociada");
+        }
+
+        if (movimiento.getBodegaDestino() == null) {
+            throw new EntityNotFoundException("El movimiento no tiene bodega destino asociada");
+        }
+
+        if (movimiento.getBodegaOrigen().getUsuario() == null) {
+            throw new EntityNotFoundException("La bodega origen no tiene encargado asociado");
+        }
+
+        if (movimiento.getBodegaDestino().getUsuario() == null) {
+            throw new EntityNotFoundException("La bodega destino no tiene encargado asociado");
+        }
+
+        UsuarioResponseDTO dtoUsuarioMovimiento = usuarioMapper.entidadADTO(movimiento.getUsuario());
+
+        UsuarioResponseDTO dtoUsuarioOrigen = usuarioMapper.entidadADTO(movimiento.getBodegaOrigen().getUsuario());
+        UsuarioResponseDTO dtoUsuarioDestino = usuarioMapper.entidadADTO(movimiento.getBodegaDestino().getUsuario());
+
+        BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(movimiento.getBodegaOrigen(), dtoUsuarioOrigen);
+        BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(movimiento.getBodegaDestino(), dtoUsuarioDestino);
+
+        return movimientoMapper.entidadADTO(movimiento, dtoUsuarioMovimiento, dtoOrigen, dtoDestino);
+    }
+
+    private ProductoResponseDTO construirProductoDTO(Producto producto) {
+        if (producto == null) {
+            throw new EntityNotFoundException("El detalle no tiene producto asociado");
+        }
+
+        if (producto.getBodega() == null) {
+            throw new EntityNotFoundException("El producto no tiene bodega asociada");
+        }
+
+        if (producto.getBodega().getUsuario() == null) {
+            throw new EntityNotFoundException("La bodega del producto no tiene encargado asociado");
+        }
+
+        UsuarioResponseDTO dtoUsuarioBodega = usuarioMapper.entidadADTO(producto.getBodega().getUsuario());
+        BodegaResponseDTO dtoBodegaProducto = bodegaMapper.entidadADTO(producto.getBodega(), dtoUsuarioBodega);
+
+        return productoMapper.entidadADTO(producto, dtoBodegaProducto);
     }
 }

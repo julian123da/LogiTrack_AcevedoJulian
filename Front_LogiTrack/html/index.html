@@ -1,56 +1,200 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-<meta charset="UTF-8">
-<title>Gestión de Productos</title>
-
-<link rel="stylesheet" href="../css/styles.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Sistema de Inventario</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
 </head>
-
 <body>
-
-<div class="container">
-
-<h1> Gestión de Productos</h1>
-
-<div class="card">
-
-<div class="header">
-
-<h2>Inventario</h2>
-
-<input type="text" id="buscador" placeholder="Buscar producto...">
-
-</div>
-
-<table id="tablaProductos">
-
-<thead>
-
-<tr>
-<th>ID</th>
-<th>Nombre</th>
-<th>Precio</th>
-<th>Stock</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-<script src="app.js"></script>
-
+ 
+  <!-- ══════════════════════════════════════ -->
+  <!--  SIDEBAR                               -->
+  <!-- ══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h1>Inventra</h1>
+      <span>Sistema de gestión</span>
+    </div>
+ 
+    <nav class="sidebar-nav">
+      <div class="nav-section">Módulos</div>
+ 
+      <div class="nav-item active" data-module="producto" onclick="switchModule('producto')">
+        <div class="nav-icon">📦</div>
+        <span class="nav-label">Producto</span>
+        <span class="nav-count" id="cnt-producto">—</span>
+      </div>
+ 
+      <div class="nav-item" data-module="usuario" onclick="switchModule('usuario')">
+        <div class="nav-icon">👤</div>
+        <span class="nav-label">Usuario</span>
+        <span class="nav-count" id="cnt-usuario">—</span>
+      </div>
+ 
+      <div class="nav-item" data-module="bodega" onclick="switchModule('bodega')">
+        <div class="nav-icon">🏭</div>
+        <span class="nav-label">Bodega</span>
+        <span class="nav-count" id="cnt-bodega">—</span>
+      </div>
+ 
+      <div class="nav-section">Operaciones</div>
+ 
+      <div class="nav-item" data-module="movimiento" onclick="switchModule('movimiento')">
+        <div class="nav-icon">🔄</div>
+        <span class="nav-label">Movimiento</span>
+        <span class="nav-count" id="cnt-movimiento">—</span>
+      </div>
+ 
+      <div class="nav-item" data-module="detalleMovimiento" onclick="switchModule('detalleMovimiento')">
+        <div class="nav-icon">📋</div>
+        <span class="nav-label">Detalle Mov.</span>
+        <span class="nav-count" id="cnt-detalleMovimiento">—</span>
+      </div>
+ 
+      <div class="nav-section">Sistema</div>
+ 
+      <div class="nav-item" data-module="auditoria" onclick="switchModule('auditoria')">
+        <div class="nav-icon">🔍</div>
+        <span class="nav-label">Auditoría</span>
+        <span class="nav-count" id="cnt-auditoria">—</span>
+      </div>
+    </nav>
+ 
+    <div class="sidebar-footer">
+      <strong>localhost:8080</strong>
+      <span id="api-status">Conectando...</span>
+    </div>
+  </aside>
+ 
+  <!-- ══════════════════════════════════════ -->
+  <!--  MAIN                                  -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="main">
+ 
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="page-title" id="page-title">Producto</div>
+        <div class="page-badge" id="page-badge">GET /api/producto</div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="globalSearch" placeholder="Buscar..." oninput="applyFilter()"/>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadCurrent()" id="refreshBtn">↻ Actualizar</button>
+        <button class="btn btn-accent btn-sm" onclick="openCreateModal()" id="createBtn">+ Nuevo</button>
+      </div>
+    </header>
+ 
+    <!-- CONTENT -->
+    <div class="content">
+ 
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total registros</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-sub">en base de datos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Mostrando</div>
+          <div class="stat-value" id="stat-showing">—</div>
+          <div class="stat-sub">en esta página</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Filtrados</div>
+          <div class="stat-value" id="stat-filtered">—</div>
+          <div class="stat-sub">tras búsqueda</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Última carga</div>
+          <div class="stat-value" id="stat-time" style="font-size:16px">—</div>
+          <div class="stat-sub" id="stat-endpoint">—</div>
+        </div>
+      </div>
+ 
+      <!-- Table card -->
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <span class="table-title" id="tableTitle">Listado de Productos</span>
+            <span class="record-count" id="recordCount"></span>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead id="tblHead"></thead>
+            <tbody id="tblBody">
+              <tr>
+                <td class="tbl-state" colspan="99">
+                  <span class="icon">📦</span>
+                  Cargando datos...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="paginationBar" style="display:none">
+          <span id="paginationInfo"></span>
+          <div class="page-btns" id="paginationBtns"></div>
+        </div>
+      </div>
+ 
+    </div><!-- /content -->
+  </div><!-- /main -->
+ 
+  <!-- ══════════════════════════════════════ -->
+  <!--  MODAL — FORMULARIO CREAR / EDITAR     -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="formModal">
+    <div class="modal" id="formModalBox">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Nuevo registro</div>
+        <button class="modal-close" onclick="closeModal('formModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="dataForm" onsubmit="return false;">
+          <div class="form-grid" id="formFields"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('formModal')">Cancelar</button>
+        <button class="btn btn-accent" id="saveBtn" onclick="saveRecord()">Guardar</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ══════════════════════════════════════ -->
+  <!--  MODAL — CONFIRMAR ELIMINACIÓN         -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal confirm-modal">
+      <div class="modal-header">
+        <div class="modal-title">⚠ Confirmar eliminación</div>
+        <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">
+          ¿Estás seguro de eliminar este registro?
+          Esta acción <strong class="danger-text">no se puede deshacer</strong>.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancelar</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ══════════════════════════════════════ -->
+  <!--  TOAST CONTAINER                       -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="toast-container" id="toastContainer"></div>
+ 
+  <script src="app.js"></script>
 </body>
 </html>
+ 

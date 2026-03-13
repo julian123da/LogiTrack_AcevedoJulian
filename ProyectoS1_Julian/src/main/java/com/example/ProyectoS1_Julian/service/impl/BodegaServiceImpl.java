@@ -26,7 +26,7 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
 
     @Override
     public BodegaResponseDTO crearBodega(BodegaRequestDTO dto) {
-        Usuario usuario = usuarioRepository.findById(dto.idEncargado())
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Bodega bodega = bodegaMapper.DTOAentidad(dto, usuario);
@@ -40,7 +40,7 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
         Bodega bodega = bodegaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bodega no encontrada"));
 
-        Usuario usuario = usuarioRepository.findById(dto.idEncargado())
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         bodegaMapper.actualizarEntidadDesdeDTO(bodega, dto, usuario);
@@ -52,7 +52,7 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
     @Override
     public List<BodegaResponseDTO> listarBodegas() {
         return bodegaRepository.findAll().stream().map(dato-> bodegaMapper.entidadADTO(dato,usuarioMapper
-                .entidadADTO(usuarioRepository.findById(dato.getEncargado().getId())
+                .entidadADTO(usuarioRepository.findById(dato.getUsuario().getId())
                         .orElseThrow(()->new RuntimeException("No existe la bodega"))))).toList();
     }
 
@@ -61,7 +61,7 @@ public class BodegaServiceImpl implements com.example.ProyectoS1_Julian.service.
         Bodega bodega = bodegaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Bodega no encontrada"));
 
-        Usuario u = usuarioRepository.findById(bodega.getEncargado().getId()).orElseThrow(()-> new RuntimeException("Error"));
+        Usuario u = usuarioRepository.findById(bodega.getUsuario().getId()).orElseThrow(()-> new RuntimeException("Error"));
         UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(u);
         return bodegaMapper.entidadADTO(bodega,dtoUsuario);
     }

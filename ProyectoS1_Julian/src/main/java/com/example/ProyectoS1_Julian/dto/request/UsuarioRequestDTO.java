@@ -1,5 +1,6 @@
 package com.example.ProyectoS1_Julian.dto.request;
 
+import com.example.ProyectoS1_Julian.modelo.Rol;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -21,12 +22,6 @@ public record UsuarioRequestDTO(
         String documento,
 
         @Schema(
-                description = "Rol del usuario",
-                example = "ADMIN"
-        )
-        String rol,
-
-        @Schema(
                 description = "Username del usuario",
                 example = "julian_admin"
         )
@@ -38,7 +33,13 @@ public record UsuarioRequestDTO(
                 example = "123456"
         )
         @NotBlank(message = "La contraseña no puede estar vacia.")
-        String password
+        String password,
+
+        @Schema(
+                description = "Rol del usuario",
+                example = "ADMIN"
+        )
+        Rol rol
 
 ) {
 }

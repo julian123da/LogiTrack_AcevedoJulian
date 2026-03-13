@@ -39,7 +39,7 @@ public class BodegaMapper {
         bodega.setNombre(dto.nombre());
         bodega.setUbicacion(dto.ubicacion());
         bodega.setCapacidad(dto.capacidad());
-        bodega.setEncargado(usuario);
+        bodega.setUsuario(usuario);
 
         return bodega;
     }
@@ -53,7 +53,7 @@ public class BodegaMapper {
         bodega.setNombre(dto.nombre());
         bodega.setUbicacion(dto.ubicacion());
         bodega.setCapacidad(dto.capacidad());
-        bodega.setEncargado(usuario);
+        bodega.setUsuario(usuario);
 
     }
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "movimiento")
@@ -21,18 +21,23 @@ public class Movimiento {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate fecha;
+    private Date fecha;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoMovimiento tipoMovimiento;
-    @ManyToOne
-    @JoinColumn(name = "idUsuario", nullable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
-    @ManyToOne
-    @JoinColumn(name = "idBodegaOrigen", nullable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bodega_origen_id", nullable = false)
     private Bodega bodegaOrigen;
-    @ManyToOne
-    @JoinColumn(name = "idBodegaDestino", nullable = false)
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bodega_destino_id", nullable = false)
     private Bodega bodegaDestino;
 
 }

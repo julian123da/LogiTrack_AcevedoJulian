@@ -19,12 +19,11 @@ public class Usuario {
     private String nombre;
     @Column(nullable = false)
     private String documento;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Rol rol;
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rol rol;
 }

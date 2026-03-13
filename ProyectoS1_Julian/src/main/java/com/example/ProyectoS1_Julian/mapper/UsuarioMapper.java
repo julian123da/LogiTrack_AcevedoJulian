@@ -9,22 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsuarioMapper {
 
-    /* DTO entidad */
-
-    public Usuario DTOAentidad(UsuarioRequestDTO dto){
-
-        if(dto == null) return null;
-
-        Usuario newusuario = new Usuario();
-
-        newusuario.setNombre(dto.nombre());
-        newusuario.setDocumento(dto.documento());
-        newusuario.setRol(Rol.valueOf(dto.rol()));
-        newusuario.setUsername(dto.username());
-        newusuario.setPassword(dto.password());
-
-        return newusuario;
-    }
 
     /* entidad DTO */
 
@@ -33,16 +17,27 @@ public class UsuarioMapper {
         if(usuario == null) return null;
 
         return new UsuarioResponseDTO(
-
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getDocumento(),
-                usuario.getRol(),
-                usuario.getUsername(),
-                usuario.getPassword()
+                usuario.getId(), usuario.getNombre(), usuario.getDocumento(),
+                usuario.getUsername(), usuario.getPassword(),usuario.getRol()
 
         );
     }
+
+    /* DTO entidad */
+
+    public Usuario DTOAentidad(UsuarioRequestDTO dto){
+
+        if(dto == null) return null;
+
+        Usuario u = new Usuario();
+        u.setNombre(dto.nombre());
+        u.setDocumento(dto.documento());
+        u.setUsername(dto.username());
+        u.setPassword(dto.password());
+        u.setRol(dto.rol());
+        return u;
+    }
+
 
     /* actualizar entidad */
 
@@ -50,13 +45,11 @@ public class UsuarioMapper {
                                           UsuarioRequestDTO dto){
 
         if(dto == null || usuario == null) return;
-
         usuario.setNombre(dto.nombre());
         usuario.setDocumento(dto.documento());
-        usuario.setRol(Rol.valueOf(dto.rol()));
         usuario.setUsername(dto.username());
         usuario.setPassword(dto.password());
-
+        usuario.setRol(dto.rol());
     }
 
 }

@@ -19,7 +19,7 @@ public record BodegaRequestDTO(
         @Positive(message = "Error, la capacidad debe ser positiva")
         Integer capacidad,
 
-        Long idEncargado
+        Long usuarioId
 
 ) {
 }

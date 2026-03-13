@@ -6,7 +6,7 @@ public record BodegaResponseDTO(
         String nombre,
         String ubicacion,
         Integer capacidad,
-        UsuarioResponseDTO encargado
+        UsuarioResponseDTO usuario
 
 ) {
 }

@@ -19,7 +19,7 @@ import java.util.List;
 
 @Tag(name = "Movimiento", description = "Contiene todo lo relacionado con Movimientos")
 @RestController
-@RequestMapping("/api/movimientos")
+@RequestMapping("/api/movimiento")
 @RequiredArgsConstructor
 @Validated
 public class MovimientoController {

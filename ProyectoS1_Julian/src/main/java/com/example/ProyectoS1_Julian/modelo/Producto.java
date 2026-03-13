@@ -19,18 +19,17 @@ public class Producto {
     private Long id;
     @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false)
     private String categoria;
+
     @Column(nullable = false)
     private Double precio;
-    private Integer stock_total;
 
-    public void setStockTotal() {
-    }
+    @Column(nullable = false)
+    private Integer stock;
 
-    public Integer getStockTotal() {
-        return 0;
-    }
-
-    public void setPrecio() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bodega_id")
+    private Bodega bodega;
 }

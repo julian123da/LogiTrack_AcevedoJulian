@@ -5,6 +5,7 @@ public record ProductoResponseDTO(
         String nombre,
         String categoria,
         Double precio,
-        Integer stockTotal
+        Integer stock,
+        BodegaResponseDTO bodega
 ) {
 }

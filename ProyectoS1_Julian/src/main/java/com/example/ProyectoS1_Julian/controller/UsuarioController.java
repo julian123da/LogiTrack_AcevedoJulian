@@ -32,6 +32,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "201", description = "Usuario creado correctamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos o estructura incorrecta", content = @Content)
     })
+    //Crear Usuario
     public ResponseEntity<UsuarioResponseDTO> crearUsuario(@RequestBody UsuarioRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crear(dto));
     }
@@ -43,11 +44,13 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content),
             @ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content)
     })
+
+    //Actualizar Usuario
     public ResponseEntity<UsuarioResponseDTO> actualizarUsuario(
             @RequestBody UsuarioRequestDTO dto,
             @Parameter(description = "ID del usuario a actualizar", example = "1") @PathVariable Long id
     ) {
-        return ResponseEntity.ok(usuarioService.actualizar(dto, id));
+        return ResponseEntity.ok().body(usuarioService.actualizar(dto, id));
     }
 
     @Operation(summary = "Listar usuarios", description = "Obtiene la lista de todos los usuarios registrados")
@@ -56,7 +59,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida correctamente")
     })
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
-        return ResponseEntity.ok(usuarioService.listar());
+        return ResponseEntity.ok().body(usuarioService.listar());
     }
 
     @Operation(summary = "Buscar usuario por ID", description = "Obtiene la información de un usuario específico mediante su ID")
@@ -68,7 +71,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(
             @Parameter(description = "ID del usuario", example = "1") @PathVariable Long id
     ) {
-        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+        return ResponseEntity.ok().body(usuarioService.buscarPorId(id));
     }
 
     @Operation(summary = "Eliminar usuario", description = "Permite eliminar un usuario mediante su ID")

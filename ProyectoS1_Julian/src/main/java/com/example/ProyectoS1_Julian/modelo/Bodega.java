@@ -16,14 +16,18 @@ public class Bodega {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String nombre;
+
     @Column(nullable = false)
     private String ubicacion;
+
     @Column(nullable = false)
     private Integer capacidad;
-    @ManyToOne
-    @JoinColumn(name = "idEncargado", nullable = false)
-    private Usuario encargado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "encargado_id", nullable = false)
+    private Usuario usuario;
 
 }

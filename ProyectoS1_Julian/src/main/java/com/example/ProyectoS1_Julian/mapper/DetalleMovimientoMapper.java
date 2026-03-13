@@ -2,6 +2,8 @@ package com.example.ProyectoS1_Julian.mapper;
 
 import com.example.ProyectoS1_Julian.dto.request.DetalleMovimientoRequestDTO;
 import com.example.ProyectoS1_Julian.dto.response.DetalleMovimientoResponseDTO;
+import com.example.ProyectoS1_Julian.dto.response.MovimientoResponseDTO;
+import com.example.ProyectoS1_Julian.dto.response.ProductoResponseDTO;
 import com.example.ProyectoS1_Julian.modelo.DetalleMovimiento;
 import com.example.ProyectoS1_Julian.modelo.Movimiento;
 import com.example.ProyectoS1_Julian.modelo.Producto;
@@ -12,17 +14,17 @@ public class DetalleMovimientoMapper {
 
     /* entidad → DTO */
 
-    public DetalleMovimientoResponseDTO entidadADTO(DetalleMovimiento detalle){
+    public DetalleMovimientoResponseDTO entidadADTO(DetalleMovimiento detalle, MovimientoResponseDTO dto,
+                                                    ProductoResponseDTO dtop){
 
         if(detalle == null) return null;
 
         return new DetalleMovimientoResponseDTO(
 
                 detalle.getId(),
-                detalle.getMovimiento().getId(),
-                detalle.getProducto().getId(),
-                detalle.getCantidad()
-
+                detalle.getCantidad(),
+                dto,
+                dtop
         );
     }
 

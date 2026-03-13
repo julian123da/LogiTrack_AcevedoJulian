@@ -14,7 +14,10 @@ public record ProductoRequestDTO(
         double precio,
 
         @Schema(description = "Cantidad total en stock", example = "10")
-        Integer stockTotal
+        Integer stock,
+
+        @Schema( description = "Id bodega donde se almacena el producto")
+        Long bodegaId
 
 ) {
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "auditoria")
@@ -22,17 +23,16 @@ public class Auditoria {
 
     @Column(nullable = false)
     private String entidad;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Operacion operacion;
+
     @Column(nullable = false)
-    private LocalDateTime fecha;
-    @ManyToOne
-    @JoinColumn(name = "idUsuario")
+    private Date fecha;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id",nullable = false)
     private Usuario usuario;
-    @Column(columnDefinition = "TEXT")
-    private String valorAnterior;
-    @Column(columnDefinition = "TEXT")
-    private String valorNuevo;
 
 }

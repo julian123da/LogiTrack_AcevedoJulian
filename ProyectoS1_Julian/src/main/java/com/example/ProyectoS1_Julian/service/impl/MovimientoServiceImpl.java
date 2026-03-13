@@ -33,11 +33,11 @@ public class MovimientoServiceImpl implements com.example.ProyectoS1_Julian.serv
     @Override
     public MovimientoResponseDTO crearMovimiento(MovimientoRequestDTO dto) {
         // Obtener entidades relacionadas
-        Usuario usuario = usuarioRepository.findById(dto.idUsuario())
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        Bodega bodegaOrigen = bodegaRepository.findById(dto.idBodegaOrigen())
+        Bodega bodegaOrigen = bodegaRepository.findById(dto.bodegaOrigenId())
                 .orElseThrow(() -> new RuntimeException("Bodega origen no encontrada"));
-        Bodega bodegaDestino = bodegaRepository.findById(dto.idBodegaDestino())
+        Bodega bodegaDestino = bodegaRepository.findById(dto.bodegaDestinoId())
                 .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada"));
 
         // Mapear DTO a entidad
@@ -58,11 +58,11 @@ public class MovimientoServiceImpl implements com.example.ProyectoS1_Julian.serv
         Movimiento movimiento = movimientoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));
 
-        Usuario usuario = usuarioRepository.findById(dto.idUsuario())
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        Bodega bodegaOrigen = bodegaRepository.findById(dto.idBodegaOrigen())
+        Bodega bodegaOrigen = bodegaRepository.findById(dto.bodegaOrigenId())
                 .orElseThrow(() -> new RuntimeException("Bodega origen no encontrada"));
-        Bodega bodegaDestino = bodegaRepository.findById(dto.idBodegaDestino())
+        Bodega bodegaDestino = bodegaRepository.findById(dto.bodegaDestinoId())
                 .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada"));
 
         movimientoMapper.actualizarEntidadDesdeDTO(movimiento, dto, usuario, bodegaOrigen, bodegaDestino);

@@ -8,10 +8,10 @@ public record DetalleMovimientoRequestDTO(
         Integer cantidad,
 
         @Schema(description = "ID del movimiento al que pertenece", example = "1")
-        Long idMovimiento,
+        Long movimientoId,
 
         @Schema(description = "ID del producto que se mueve", example = "2")
-        Long idProducto
+        Long productoId
 
 ) {
 }

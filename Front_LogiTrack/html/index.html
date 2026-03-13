@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
-<title>Gestión Tienda</title>
-<link rel="stylesheet" href="style.css">
+<title>Gestión de Productos</title>
+
+<link rel="stylesheet" href="../css/styles.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-<h1>Lista de Productos</h1>
+<div class="container">
+
+<h1> Gestión de Productos</h1>
+
+<div class="card">
+
+<div class="header">
+
+<h2>Inventario</h2>
+
+<input type="text" id="buscador" placeholder="Buscar producto...">
+
+</div>
 
 <table id="tablaProductos">
 
 <thead>
+
 <tr>
 <th>ID</th>
 <th>Nombre</th>
 <th>Precio</th>
 <th>Stock</th>
 </tr>
+
 </thead>
 
 <tbody>
@@ -26,6 +45,10 @@
 </tbody>
 
 </table>
+
+</div>
+
+</div>
 
 <script src="app.js"></script>
 

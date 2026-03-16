@@ -1,6 +1,5 @@
 package com.example.S1_Proyecto.service.impl;
 
-
 import com.example.S1_Proyecto.dto.request.MovimientoRequestDTO;
 import com.example.S1_Proyecto.dto.response.BodegaResponseDTO;
 import com.example.S1_Proyecto.dto.response.MovimientoResponseDTO;
@@ -18,11 +17,13 @@ import com.example.S1_Proyecto.service.MovimientoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MovimientoServiceImpl implements MovimientoService {
 
     private final MovimientoRepository movimientoRepository;
@@ -34,7 +35,6 @@ public class MovimientoServiceImpl implements MovimientoService {
 
     @Override
     public MovimientoResponseDTO crearMovimiento(MovimientoRequestDTO dto) {
-        // Obtener entidades relacionadas
         Usuario usuario = usuarioRepository.findById(dto.usuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Bodega bodegaOrigen = bodegaRepository.findById(dto.bodegaOrigenId())
@@ -42,16 +42,13 @@ public class MovimientoServiceImpl implements MovimientoService {
         Bodega bodegaDestino = bodegaRepository.findById(dto.bodegaDestinoId())
                 .orElseThrow(() -> new RuntimeException("Bodega destino no encontrada"));
 
-        // Mapear DTO a entidad
         Movimiento movimiento = movimientoMapper.DTOAentidad(dto, usuario, bodegaOrigen, bodegaDestino);
         Movimiento movimientoGuardado = movimientoRepository.save(movimiento);
 
-        // Mapear entidades relacionadas a DTOs
         UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(usuario);
         BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(bodegaOrigen, dtoUsuario);
         BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(bodegaDestino, dtoUsuario);
 
-        // Retornar DTO final
         return movimientoMapper.entidadADTO(movimientoGuardado, dtoUsuario, dtoOrigen, dtoDestino);
     }
 
@@ -78,6 +75,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MovimientoResponseDTO> listarMovimientos() {
         return movimientoRepository.findAll().stream().map(movimiento -> {
             UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(movimiento.getUsuario());
@@ -88,6 +86,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MovimientoResponseDTO buscarPorId(Long id) {
         Movimiento movimiento = movimientoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Movimiento no encontrado"));

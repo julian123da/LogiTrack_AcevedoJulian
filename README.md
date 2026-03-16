@@ -551,4 +551,5 @@ Buenas prácticas backend.
 
 ## Autor
 
-Proyecto desarrollado como sistema académico de gestión empresarial aplicando buenas prácticas de desarrollo backend con Spring Boot.
+Proyecto desarrollado como sistema académico de gestión empresarial aplicando buenas prácticas de desarrollo backend con Spring Boot: Julian David Acevedo Gómez.
+

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LogiTrack | Gestión de Bodegas</title>
-    <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="loginView" class="login-shell">
@@ -23,7 +23,7 @@
             <div class="brand-pill">Creación de usuarios restringida desde el front a rol EMPLEADO.</div>
           </div>
         </div>
-        <p class="muted">El frontend apunta automáticamente al backend en el puerto 8081 del mismo equipo.</p>
+        <p class="muted">El frontend apunta automáticamente al backend en el puerto 8080 del mismo equipo.</p>
       </div>
 
       <div class="login-form-wrap">
@@ -40,11 +40,6 @@
               <label for="password">Contraseña</label>
               <input id="password" name="password" type="password" placeholder="••••••••" required />
             </div>
-          </div>
-
-          <div class="form-note" style="margin-top:18px;">
-            Backend detectado: <strong>http://localhost:8081</strong> o <strong>http://127.0.0.1:8081</strong> según cómo abras Live Server.
-            El campo de URL fue eliminado del frontend.
           </div>
 
           <div class="auth-actions">
@@ -78,7 +73,7 @@
           <p id="pageSubtitle">Vista principal del sistema LogiTrack.</p>
         </div>
         <div class="topbar-right">
-          <span class="chip" id="connectionChip">Backend: 8081</span>
+          <span class="chip" id="connectionChip">Backend: 8080</span>
           <button class="btn btn-secondary" id="refreshBtn" type="button">Recargar</button>
           <button class="btn btn-danger" id="logoutBtn" type="button">Cerrar sesión</button>
         </div>
@@ -121,6 +116,6 @@
   <div id="modalRoot"></div>
   <div id="toastRoot" class="toast-wrap"></div>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

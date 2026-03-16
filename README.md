@@ -1,410 +1,554 @@
-# LogiTrack - Sistema de Gestión y Auditoría de Inventarios
+# LogiTrack - Sistema de Gestión y Auditoría de Bodegas
 
 ## Descripción del Proyecto
 
-La empresa **LogiTrack S.A.** administra múltiples bodegas distribuidas en diferentes ciudades, encargadas del almacenamiento de productos y la gestión de movimientos de inventario (entradas, salidas y transferencias).
+LogiTrack S.A. es una empresa que administra múltiples bodegas distribuidas en distintas ciudades, encargadas de almacenar productos y gestionar movimientos de inventario como entradas, salidas y transferencias.
 
-Actualmente, el control de inventarios se realiza manualmente mediante hojas de cálculo, lo que genera problemas de trazabilidad, seguridad y control de accesos.
+Anteriormente, el control de inventarios y auditorías se realizaba manualmente mediante hojas de cálculo, lo que generaba múltiples problemas operativos, de seguridad y de control de la información.
 
-Este proyecto consiste en el desarrollo de un **backend centralizado en Spring Boot** que permita gestionar el inventario de forma segura, auditable y eficiente mediante una API REST protegida con JWT.
+Por esta razón, se desarrolló un sistema backend centralizado utilizando Spring Boot, que permite gestionar el inventario de forma segura, automatizada y auditable mediante una API REST.
 
----
+## Problemática
 
-## Objetivo General
+Antes de la implementación del sistema existían los siguientes problemas:
 
-Desarrollar un sistema de gestión y auditoría de bodegas que permita registrar transacciones de inventario y generar reportes auditables de los cambios realizados por cada usuario.
+- No existía trazabilidad de los movimientos de inventario.
+- El control manual generaba errores humanos.
+- No había control de acceso por usuarios.
+- No existía auditoría de cambios.
+- La información podía ser modificada sin registro.
+- No existían reportes confiables.
+- No había seguridad en el acceso a los datos.
+- No existía control de roles.
+- Difícil escalabilidad del sistema manual.
 
----
+## Solución Implementada
 
-## Tecnologías Utilizadas
+Se desarrolló un sistema backend con Spring Boot que permite:
 
-* Java 17+
-* Spring Boot
-* Spring Security
-* JWT (JSON Web Token)
-* MySQL
-* JPA / Hibernate
-* Maven
-* Swagger / OpenAPI 3
-* HTML / CSS / JavaScript (Frontend básico)
+- Gestionar bodegas y productos mediante endpoints REST.
+- Registrar movimientos de inventario automáticamente.
+- Implementar auditoría automática de cambios.
+- Proteger la información mediante autenticación JWT.
+- Implementar control de roles (ADMIN y EMPLEADO).
+- Generar reportes mediante consultas avanzadas.
+- Documentar la API mediante Swagger OpenAPI.
+- Validar datos mediante anotaciones de Spring Validation.
+- Manejar errores globalmente.
+- Centralizar la lógica de negocio.
 
----
+El sistema sigue una arquitectura por capas basada en buenas prácticas de desarrollo backend.
 
-## Funcionalidades del Sistema
+## Arquitectura del Sistema
 
-### 1. Gestión de Bodegas
+El sistema implementa una arquitectura en capas:
 
-Permite administrar las bodegas del sistema mediante operaciones CRUD.
+Controller → Service → Repository → Database
 
-Campos:
+Capas adicionales:
 
-* id
-* nombre
-* ubicacion
-* capacidad
-* encargado
+DTO → Transporte de datos
+Mapper → Conversión de datos
+Security → Seguridad JWT
+Config → Configuración global
+Exception → Manejo de errores
 
-Operaciones:
-
-* Crear bodegas
-* Consultar bodegas
-* Actualizar bodegas
-* Eliminar bodegas
-
----
-
-### 2. Gestión de Productos
-
-CRUD completo de productos.
-
-Campos:
-
-* id
-* nombre
-* categoria
-* stock
-* precio
-
-Operaciones:
-
-* Crear productos
-* Consultar productos
-* Actualizar productos
-* Eliminar productos
-
----
-
-### 3. Movimientos de Inventario
-
-Permite registrar:
-
-* Entradas
-* Salidas
-* Transferencias entre bodegas
-
-Cada movimiento almacena:
-
-* Fecha
-* Tipo de movimiento:
-
-  * ENTRADA
-  * SALIDA
-  * TRANSFERENCIA
-* Usuario responsable
-* Bodega origen
-* Bodega destino
-* Productos
-* Cantidades
-
----
-
-### 4. Auditoría de Cambios
-
-Se implementa una entidad **Auditoria** para registrar:
-
-* Tipo de operación:
-
-  * INSERT
-  * UPDATE
-  * DELETE
-* Fecha y hora
-* Usuario responsable
-* Entidad afectada
-* Valores anteriores
-* Valores nuevos
-
-Implementación mediante:
-
-* EntityListeners JPA
-  o
-* Aspectos personalizados (AOP)
-
----
-
-### 5. Autenticación y Seguridad
-
-Implementación de seguridad mediante:
-
-* Spring Security
-* JWT
-
-Endpoints:
-
-```
-/auth/login
-/auth/register
-```
-
-Rutas protegidas:
-
-```
-/bodegas
-/productos
-/movimientos
-/auditorias
-```
-
-Roles:
-
-* ADMIN
-* EMPLEADO
-
----
-
-### 6. Consultas Avanzadas y Reportes
-
-El sistema incluye endpoints para:
-
-Filtros:
-
-* Productos con stock bajo (<10)
-* Movimientos por rango de fechas
-* Auditorías por usuario
-* Auditorías por tipo de operación
-
-Reportes:
-
-* Stock total por bodega
-* Productos más movidos
-
-Respuesta en formato JSON.
-
----
-
-### 7. Documentación API
-
-La API se documenta mediante:
-
-Swagger / OpenAPI 3
-
-Permite:
-
-* Visualizar endpoints
-* Probar requests
-* Probar autenticación JWT
-
-Acceso:
-
-```
-http://localhost:8080/swagger-ui.html
-```
-
----
-
-### 8. Manejo de Excepciones y Validaciones
-
-Implementaciones:
-
-Manejo global:
-
-* @ControllerAdvice
-
-Validaciones:
-
-* @NotNull
-* @Size
-* @Min
-* @Max
-
-Respuestas personalizadas:
-
-* 400 Bad Request
-* 401 Unauthorized
-* 404 Not Found
-* 500 Internal Server Error
-
-Formato JSON estándar para errores.
-
----
-
-### 9. Despliegue
-
-Configuración:
-
-Base de datos MySQL en:
-
-```
-application.properties
-```
-
-Scripts incluidos:
-
-```
-schema.sql
-data.sql
-```
-
-Ejecución:
-
-Servidor:
-
-* Tomcat embebido
-  o
-* Tomcat externo
-
-Frontend básico:
-
-Carpeta:
-
-```
-frontend/
-```
-
-Incluye:
-
-* HTML
-* CSS
-* JavaScript
-
-Para probar:
-
-* Login
-* Consultas principales
-
----
+Esta arquitectura permite mantener separación de responsabilidades y facilitar el mantenimiento del sistema.
 
 ## Estructura del Proyecto
 
-```
-src/
+src/main/java/com/logitrack/
 
- ├─ controller/
- ├─ service/
- ├─ repository/
- ├─ model/
- ├─ config/
- ├─ security/
- └─ exception/
-```
+├── auth  
+├── config  
+├── controller  
+├── dto  
+├── mapper  
+├── model  
+├── repository  
+├── service  
+├── security  
+└── exception  
 
----
+## Explicación de Carpetas
 
-## Instalación y Ejecución
+## auth
 
-### 1 Clonar repositorio
+Esta carpeta contiene toda la lógica relacionada con la autenticación de usuarios.
 
-```
-git clone https://github.com/julian123da/LogiTrack_AcevedoJulian.git
-```
+Responsabilidades:
 
-### 2 Configurar base de datos
+- Registro de usuarios
+- Login de usuarios
+- Generación de tokens JWT
+- Validación de credenciales
+- Respuestas de autenticación
 
-Crear base de datos MySQL:
+Ejemplos de clases:
 
-```
-logitrack_db
-```
+AuthController:
+Controla los endpoints:
 
-Configurar:
+POST /auth/login  
+POST /auth/register  
 
-application.properties
+AuthService:
+Contiene la lógica de autenticación.
+
+AuthRequest:
+DTO del login.
+
+AuthResponse:
+DTO de respuesta con el token JWT.
+
+Usuario:
+Entidad del usuario autenticado.
+
+El objetivo de esta capa es permitir el acceso seguro al sistema.
+
+## config
+
+Esta carpeta contiene las configuraciones globales del sistema.
+
+Responsabilidades:
+
+- Configuración de Swagger.
+- Configuración de CORS.
+- Beans globales.
+- Configuración de ModelMapper.
+- Configuración de auditoría.
+- Configuración de propiedades.
+
+Ejemplos:
+
+SwaggerConfig  
+CorsConfig  
+ModelMapperConfig  
+
+Su función es centralizar la configuración del proyecto.
+
+## controller
+
+Esta carpeta contiene los controladores REST.
+
+Responsabilidades:
+
+- Recibir solicitudes HTTP.
+- Validar datos de entrada.
+- Llamar los services.
+- Retornar respuestas JSON.
+- Manejar endpoints REST.
+
+Ejemplos:
+
+BodegaController  
+ProductoController  
+MovimientoController  
+AuditoriaController  
+
+Ejemplo de endpoints:
+
+GET /productos  
+POST /productos  
+PUT /productos/{id}  
+DELETE /productos/{id}  
+
+GET /bodegas  
+POST /bodegas  
+
+Los controllers no contienen lógica de negocio.
+
+## dto
+
+Los DTO (Data Transfer Objects) permiten transportar información entre el backend y el cliente sin exponer directamente las entidades.
+
+Ventajas:
+
+- Seguridad.
+- Control de datos enviados.
+- Separación de responsabilidades.
+- Evita problemas de serialización.
+- Mejora el diseño de la API.
+
+Ejemplos:
+
+ProductoRequestDTO  
+ProductoResponseDTO  
+MovimientoDTO  
+UsuarioDTO  
+AuthRequest  
+AuthResponse  
+
+Tipos comunes:
+
+Request DTO:
+Datos que envía el cliente.
+
+Response DTO:
+Datos que responde el backend.
+
+## mapper
+
+Esta carpeta contiene las clases que convierten entidades en DTO y DTO en entidades.
+
+Responsabilidades:
+
+- Convertir entidades a Response DTO.
+- Convertir Request DTO a entidades.
+- Evitar lógica de conversión en controllers.
+- Mantener código limpio.
+
+Se puede implementar con:
+
+ModelMapper  
+MapStruct  
+Mappers manuales  
 
 Ejemplo:
 
-```
-spring.datasource.url=jdbc:mysql://localhost:3306/logitrack_db
+ProductoMapper:
+
+Convierte:
+
+Producto → ProductoResponseDTO
+
+ProductoRequestDTO → Producto
+
+Beneficios:
+
+- Código más mantenible.
+- Separación clara de capas.
+- Facilita cambios futuros.
+
+## model
+
+Contiene las entidades JPA que representan las tablas de la base de datos.
+
+Responsabilidades:
+
+- Representar las tablas.
+- Definir relaciones.
+- Definir columnas.
+- Definir llaves primarias.
+
+Ejemplos:
+
+Bodega  
+Producto  
+Movimiento  
+Usuario  
+Auditoria  
+
+Anotaciones usadas:
+
+@Entity  
+@Table  
+@Id  
+@GeneratedValue  
+@Column  
+@ManyToOne  
+@OneToMany  
+@JoinColumn  
+
+Estas clases representan la estructura de la base de datos.
+
+## repository
+
+Esta carpeta contiene las interfaces que permiten acceder a la base de datos mediante Spring Data JPA.
+
+Responsabilidades:
+
+- CRUD automático.
+- Queries personalizadas.
+- Consultas por filtros.
+- Acceso a datos.
+
+Ejemplo:
+
+public interface ProductoRepository extends JpaRepository<Producto, Long>
+
+Ejemplos de consultas:
+
+findByStockLessThan(int stock)
+
+findByFechaBetween(LocalDate inicio, LocalDate fin)
+
+findByUsuarioId(Long id)
+
+El repository solo accede a datos, no contiene lógica de negocio.
+
+## service
+
+Esta carpeta contiene la lógica de negocio del sistema.
+
+Responsabilidades:
+
+- Procesar datos.
+- Aplicar reglas de negocio.
+- Validar operaciones.
+- Coordinar repositories.
+- Manejar transacciones.
+- Aplicar reglas de inventario.
+
+Ejemplos:
+
+ProductoService  
+BodegaService  
+MovimientoService  
+AuditoriaService  
+
+Ejemplo de responsabilidades:
+
+Validar stock antes de salida.
+
+Registrar auditoría después de cambios.
+
+Controlar transferencias entre bodegas.
+
+El controller siempre debe llamar al service.
+
+Nunca al repository directamente.
+
+## security
+
+Esta carpeta contiene la configuración de seguridad.
+
+Responsabilidades:
+
+- Validar tokens JWT.
+- Configurar Spring Security.
+- Controlar autenticación.
+- Controlar autorización.
+- Definir roles.
+- Proteger endpoints.
+
+Ejemplos:
+
+SecurityConfig  
+JwtFilter  
+JwtUtils  
+UserDetailsServiceImpl  
+
+Funciones:
+
+Validar tokens.
+
+Agregar filtros JWT.
+
+Configurar rutas públicas y privadas.
+
+Configurar BCrypt.
+
+## exception
+
+Contiene el manejo global de excepciones.
+
+Responsabilidades:
+
+- Manejo global de errores.
+- Respuestas personalizadas.
+- Centralizar excepciones.
+- Manejo de errores HTTP.
+
+Ejemplos:
+
+GlobalExceptionHandler  
+ResourceNotFoundException  
+BadRequestException  
+UnauthorizedException  
+
+Implementado con:
+
+@ControllerAdvice  
+@ExceptionHandler  
+
+Ejemplo de respuesta:
+
+{
+ "timestamp":"2026-03-10",
+ "message":"Producto no encontrado",
+ "status":404
+}
+
+Esto permite respuestas consistentes.
+
+## Seguridad Implementada
+
+Se implementó:
+
+Spring Security  
+JWT Authentication  
+BCrypt Password Encoder  
+
+Roles:
+
+ADMIN:
+
+Puede:
+
+CRUD completo  
+Ver auditorías  
+Gestionar usuarios  
+
+EMPLEADO:
+
+Puede:
+
+Registrar movimientos  
+Consultar productos  
+Consultar bodegas  
+
+## Funcionalidades Implementadas
+
+CRUD de Bodegas.
+
+CRUD de Productos.
+
+Registro de movimientos.
+
+Transferencias entre bodegas.
+
+Auditoría automática.
+
+Seguridad JWT.
+
+Control de roles.
+
+Consultas avanzadas.
+
+Validaciones.
+
+Manejo de errores.
+
+Documentación Swagger.
+
+## Tecnologías Utilizadas
+
+Java 17
+
+Spring Boot
+
+Spring Security
+
+JWT
+
+MySQL
+
+Hibernate
+
+JPA
+
+Swagger OpenAPI
+
+Maven
+
+HTML
+
+CSS
+
+JavaScript
+
+## Base de Datos
+
+Configurada en application.properties:
+
+spring.datasource.url=jdbc:mysql://localhost:3306/logitrack
+
 spring.datasource.username=root
-spring.datasource.password=1234
+
+spring.datasource.password=123456
 
 spring.jpa.hibernate.ddl-auto=update
+
 spring.jpa.show-sql=true
-```
 
----
+## Ejecución del Proyecto
 
-### 3 Ejecutar proyecto
+1 Clonar repositorio:
 
-Desde IntelliJ o terminal:
+git clone https://github.com/tuusuario/logitrack.git
 
-```
+2 Crear base de datos:
+
+CREATE DATABASE logitrack;
+
+3 Ejecutar proyecto:
+
 mvn spring-boot:run
-```
 
-o ejecutar:
+4 Acceder a Swagger:
 
-```
-ProyectoApplication.java
-```
+http://localhost:8080/swagger-ui.html
 
----
+## Ejemplo de Login
+
+Endpoint:
+
+POST /auth/login
+
+Request:
+
+{
+ "username":"admin",
+ "password":"123456"
+}
+
+Response:
+
+{
+ "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+}
+
+Uso del token:
+
+Authorization: Bearer TOKEN
 
 ## Ejemplos de Endpoints
 
-Login:
+Productos:
 
-```
-POST /auth/login
-```
-
-Body:
-
-```
-{
-"email":"admin@test.com",
-"password":"123456"
-}
-```
-
-Respuesta:
-
-```
-{
-"token":"JWT_TOKEN"
-}
-```
-
----
-
-Consultar productos:
-
-```
 GET /productos
-```
 
-Header:
+POST /productos
 
-```
-Authorization: Bearer TOKEN
-```
+PUT /productos/{id}
 
----
+DELETE /productos/{id}
 
-## Resultados Esperados
+Movimientos:
 
-El proyecto debe incluir:
+POST /movimientos
 
-* Backend completo Spring Boot
-* Scripts SQL
-* Swagger documentado
-* README documentado
-* Frontend básico
-* Repositorio GitHub
+GET /movimientos
 
----
+GET /movimientos/fecha
 
-## Entregables
+Auditoría:
 
-* Código fuente backend
-* Scripts SQL
-* Documentación Swagger
-* README
-* Frontend básico
-* Documento explicativo
-* Diagrama de clases
-* Arquitectura del sistema
-* Ejemplo de token JWT
-* Repositorio GitHub
+GET /auditoria
 
----
+GET /auditoria/usuario
+
+## Resultado Final
+
+El sistema LogiTrack permite:
+
+Control completo del inventario.
+
+Seguridad de acceso.
+
+Auditoría de cambios.
+
+API documentada.
+
+Arquitectura limpia.
+
+Escalabilidad del sistema.
+
+Separación de responsabilidades.
+
+Buenas prácticas backend.
 
 ## Autor
 
-Julian Acevedo
-
-Proyecto académico - Sistema de Gestión LogiTrack
-
----
-
-## Estado del Proyecto
-
-Proyecto en desarrollo.
+Proyecto desarrollado como sistema académico de gestión empresarial aplicando buenas prácticas de desarrollo backend con Spring Boot.

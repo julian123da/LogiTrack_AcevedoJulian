@@ -19,4 +19,6 @@ public interface MovimientoService {
 
     void eliminarMovimiento(Long id);
 
+    List<MovimientoResponseDTO> Recientes();
+
 }

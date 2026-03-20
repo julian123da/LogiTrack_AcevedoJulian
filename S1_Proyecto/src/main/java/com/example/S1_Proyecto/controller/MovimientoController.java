@@ -88,4 +88,12 @@ public class MovimientoController {
         movimientoService.eliminarMovimiento(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/recientes")
+    public ResponseEntity<List<MovimientoResponseDTO>> Receintes(){
+        List<MovimientoResponseDTO> reciente = movimientoService.Recientes();
+        return ResponseEntity.ok(reciente);
+    }
+    
+
 }

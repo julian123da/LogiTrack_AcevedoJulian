@@ -105,4 +105,14 @@ public class MovimientoServiceImpl implements MovimientoService {
         }
         movimientoRepository.deleteById(id);
     }
+
+    @Override
+    public List<MovimientoResponseDTO> Recientes() {
+        return movimientoRepository.findAll().stream().map(movimiento -> {
+            UsuarioResponseDTO dtoUsuario = usuarioMapper.entidadADTO(movimiento.getUsuario());
+            BodegaResponseDTO dtoOrigen = bodegaMapper.entidadADTO(movimiento.getBodegaOrigen(), dtoUsuario);
+            BodegaResponseDTO dtoDestino = bodegaMapper.entidadADTO(movimiento.getBodegaDestino(), dtoUsuario);
+            return movimientoMapper.entidadADTO(movimiento, dtoUsuario, dtoOrigen, dtoDestino);
+        }).toList();
+    }
 }
